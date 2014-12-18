@@ -14,7 +14,7 @@ An Azure Event Hub client that is easy to use and performs well. From a local ma
         deviceId: 1,
     });
 
-### Performance
+### Performance Optimizations
 
 Performance was optimized in a number of ways:
 
