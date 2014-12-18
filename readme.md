@@ -14,6 +14,12 @@ An Azure Event Hub client that is easy to use and performs well. From a local ma
         deviceId: 1,
     });
 
+### Installation
+
+	npm install eventhubs-js
+
+Don't forget to update your `package.json` file.
+
 ### Performance Optimizations
 
 Performance was optimized in a number of ways:
