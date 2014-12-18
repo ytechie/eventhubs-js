@@ -14,6 +14,13 @@ An Azure Event Hub client that is easy to use and performs well. From a local ma
         deviceId: 1,
     });
 
+### Performance
+
+Performance was optimized in a number of ways:
+
+1. Setting `http.globalAgent.maxSockets = 50;` increases the HTTP connection pool, which allows us to create more connections to serve messages that need sent. If you don't send a large volume of messages, no problem, the pool will remain relatively empty.
+1. Caching the SAS Tokens. I haven't tested the performance of the node.js crypto libraries and moment time calculations, but it was easy enough to cache the generated SAS tokens to avoid recalcuating on each message.
+
 ### Examples & Promises
 
 Promises allow you to chain calls without "callback hell":
