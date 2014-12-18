@@ -1,0 +1,26 @@
+{
+  "name": "eventhubs-js",
+  "version": "1.0.0",
+  "description": "Easy to use client for Azure event hubs",
+  "main": "client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jason Young",
+  "license": "Apache2",
+  "keywords": [
+    "event",
+    "hubs",
+    "azure",
+    "service",
+    "bus",
+    "mqtt"
+  ],
+  "dependencies": {
+    "moment": "^2.8.4",
+    "q": "^1.1.2"
+  },
+  "devDependencies": {
+    "easy-config": "^0.4.3"
+  }
+}
