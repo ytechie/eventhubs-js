@@ -15,9 +15,10 @@ var eventHubsNamespace = config.EventHubsNamespace,
     eventHubsKey = config.EventHubsKey,
     sasToken = config.SasToken;
 
+testSendContinuous();
 //testSendPerformance();
 //example1();
-exampleWithSasToken();
+//exampleWithSasToken();
 
 function sendRandomData(silent) {
     var deferral = Q.defer();
@@ -40,6 +41,17 @@ function sendRandomData(silent) {
         .done();
     
     return deferral.promise;
+}
+
+function testSendContinuous() {
+    eventHubs.init({
+        hubNamespace: eventHubsNamespace,
+        hubName: eventHubsHubName,
+        keyName: eventHubsKeyName,
+        key: eventHubsKey
+    });
+
+    setInterval(sendRandomData, 1000);
 }
 
 function testSendPerformance() {
