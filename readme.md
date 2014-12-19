@@ -2,7 +2,12 @@ An Azure Event Hub client that is easy to use and performs well. From a local ma
 
 ### Simplest Usage
 
-    eventHubs.init(eventHubsNamespace, eventHubsHubName, eventHubsKeyName, eventHubsKey);
+    eventHubs.init({
+        hubNamespace: eventHubsNamespace,
+        hubName: eventHubsHubName,
+        keyName: eventHubsKeyName,
+        key: eventHubsKey
+    });
 
     var deviceMessage = {
         Temperature: 45.2,
@@ -12,6 +17,16 @@ An Azure Event Hub client that is easy to use and performs well. From a local ma
     eventHubs.sendMessage({
         message: deviceMessage,
         deviceId: 1,
+    });
+
+### Other Usages
+
+When you initialize the event hubs client, it's advisable to use a SAS token in a production environment. This is a revokable key that is unique to the device. You can generate a token programatically, or [online using this form](http://eventhubssasgenerator.azurewebsites.net/).
+
+    eventHubs.init({
+        hubNamespace: eventHubsNamespace,
+        hubName: eventHubsHubName,
+        sasToken: sasToken
     });
 
 ### Installation

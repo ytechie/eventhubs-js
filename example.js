@@ -12,11 +12,13 @@ var config = easyConfig.loadConfig();
 var eventHubsNamespace = config.EventHubsNamespace,
     eventHubsHubName = config.EventHubsHubName,
     eventHubsKeyName = config.EventHubsKeyName,
-    eventHubsKey = config.EventHubsKey;
+    eventHubsKey = config.EventHubsKey,
+    sasToken = config.SasToken;
 
 //setInterval(sendRandomData, 1000);
 //testSendPerformance();
 example1();
+exampleWithSasToken();
 
 function sendRandomData(silent) {
     var deferral = Q.defer();
@@ -72,13 +74,36 @@ function testSendPerformance() {
 }
 
 function example1() {
-    eventHubs.init(eventHubsNamespace, eventHubsHubName, eventHubsKeyName, eventHubsKey);
+    eventHubs.init({
+        hubNamespace: eventHubsNamespace,
+        hubName: eventHubsHubName,
+        keyName: eventHubsKeyName,
+        key: eventHubsKey
+    });
 
     var deviceMessage = {
         Temperature: 45.2,
         Pressure: 23.7
     }
 
+    eventHubs.sendMessage({
+        message: deviceMessage,
+        deviceId: 1,
+    });
+}
+
+function exampleWithSasToken() {
+    eventHubs.init({
+        hubNamespace: eventHubsNamespace,
+        hubName: eventHubsHubName,
+        sasToken: sasToken
+    });
+    
+    var deviceMessage = {
+        Temperature: 45.2,
+        Pressure: 23.7
+    }
+    
     eventHubs.sendMessage({
         message: deviceMessage,
         deviceId: 1,

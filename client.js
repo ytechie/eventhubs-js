@@ -5,9 +5,10 @@ var Q = require("q"),
 	moment = require('moment');
 
 var namespace,
-	hubName,
-	keyName,
-	key,
+    hubName,
+    keyName,
+    key,
+    sasToken,
 	sasTokens = {}; //key=uri, value=SAS token
 
 function getSasToken(uri) {
@@ -15,12 +16,12 @@ function getSasToken(uri) {
         toSign,
 		hmac,
 		encodedHmac,
-		sasToken;
+		token;
 
 	//Cache tokens to avoid recalculations
-	sasToken = sasTokens[uri];
-	if(sasToken) {
-		return sasToken;
+    token = sasTokens[uri];
+	if(token) {
+		return token;
 	}
 
     expiration = moment().add(15, 'minutes').unix();
@@ -30,11 +31,11 @@ function getSasToken(uri) {
     hmac.update(toSign);
 	encodedHmac = hmac.digest('base64');
 
-	sasToken = 'SharedAccessSignature sr=' + encodeURIComponent(uri) + '&sig=' + encodeURIComponent(encodedHmac) + '&se=' + expiration + '&skn=' + keyName;
+    token = 'SharedAccessSignature sr=' + encodeURIComponent(uri) + '&sig=' + encodeURIComponent(encodedHmac) + '&se=' + expiration + '&skn=' + keyName;
 
-	sasTokens[uri] = sasToken;
+	sasTokens[uri] = token;
 
-	return sasToken;
+	return token;
 }
 
 function getDeviceUri(deviceId) {
@@ -44,11 +45,13 @@ function getDeviceUri(deviceId) {
 }
 
 
-function init(eventHubsNamespace, eventHubsHubName, eventHubsKeyName, eventHubsKey) {
-	namespace = eventHubsNamespace;
-	hubName = eventHubsHubName;
-	keyName = eventHubsKeyName;
-    key = eventHubsKey;
+//hubNamespace, hubName, keyName, key, sasToken
+function init(options) {
+    namespace = options.hubNamespace;
+    hubName = options.hubName;
+    keyName = options.keyName;
+    key = options.key;
+    sasToken = options.sasToken;
 
     //Allow the connection pool to grow larger. This improves performance
     //by a factor of 10x in my testing
@@ -61,15 +64,15 @@ function sendMessage(options) {
 		deferral,
 		requestOptions,
 		deviceUri,
-        sasToken,
+        token,
         payload,
         req,
         responseData = '';
 
 	deferral = Q.defer();
 
-	deviceUri = getDeviceUri(deviceId);
-    sasToken = getSasToken(deviceUri);
+    deviceUri = getDeviceUri(deviceId);
+    token = sasToken || getSasToken(deviceUri);
     
     if (typeof message === 'string') {
         payload = message;
@@ -84,7 +87,7 @@ function sendMessage(options) {
         path: '/' + hubName + '/publishers/' + deviceId + '/messages',
         method: 'POST',
         headers: {
-            'Authorization': sasToken,
+            'Authorization': token,
             'Content-Length': payload.length,
             'Content-Type': 'application/atom+xml;type=entry;charset=utf-8'
         }
