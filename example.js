@@ -15,9 +15,8 @@ var eventHubsNamespace = config.EventHubsNamespace,
     eventHubsKey = config.EventHubsKey,
     sasToken = config.SasToken;
 
-//setInterval(sendRandomData, 1000);
 //testSendPerformance();
-example1();
+//example1();
 exampleWithSasToken();
 
 function sendRandomData(silent) {
@@ -44,7 +43,12 @@ function sendRandomData(silent) {
 }
 
 function testSendPerformance() {
-    eventHubs.init(eventHubsNamespace, eventHubsHubName, eventHubsKeyName, eventHubsKey);
+    eventHubs.init({
+        hubNamespace: eventHubsNamespace,
+        hubName: eventHubsHubName,
+        keyName: eventHubsKeyName,
+        key: eventHubsKey
+    });
 
     //warm-up
     sendRandomData(true);
