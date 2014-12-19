@@ -49,3 +49,4 @@ config/config.json
 bin/*
 obj/*
 *.suo
+npm-debug.log
