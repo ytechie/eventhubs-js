@@ -1,4 +1,4 @@
-An Azure Event Hub client that is easy to use and performs well. From a local machine, I'm able to sustain 200-300 messages per second from a single client. Performance if running in Azure should be even better.
+An Azure Event Hub client that is easy to use and performs well. From a local machine, I'm able to sustain **~300** messages per second from a single client. When running in an Azure VM in the same region as the Event Hubs instance, I was able to send **~400** messages per second.
 
 ### Simplest Usage
 
