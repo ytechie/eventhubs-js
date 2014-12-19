@@ -1,6 +1,6 @@
 {
     "name": "eventhubs-js",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Easy to use client for Azure event hubs",
     "main": "client.js",
     "repository": {
