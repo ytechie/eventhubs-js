@@ -9,6 +9,10 @@ var sasToken;
 
 var config = easyConfig.loadConfig();
 
+if (!config.EventHubsNamespace) {
+    throw new Error("Config file not found, or you forgot to set the namespace in the config.");
+}
+
 var eventHubsNamespace = config.EventHubsNamespace,
     eventHubsHubName = config.EventHubsHubName,
     eventHubsKeyName = config.EventHubsKeyName,
