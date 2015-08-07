@@ -17,7 +17,8 @@ var eventHubsNamespace = config.EventHubsNamespace,
     eventHubsHubName = config.EventHubsHubName,
     eventHubsKeyName = config.EventHubsKeyName,
     eventHubsKey = config.EventHubsKey,
-    sasToken = config.SasToken;
+    sasToken = config.SasToken,
+    deviceId = config.DeviceName;
 
 testSendContinuous();
 //testSendPerformance();
@@ -34,7 +35,7 @@ function sendRandomData(silent) {
     
     eventHubs.sendMessage({
         message: payload,
-        deviceId: 1,
+        deviceId: deviceId,
     }).then(function () {
         if (!silent) console.log('Sent ' + JSON.stringify(payload));
         deferral.resolve();
