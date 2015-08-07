@@ -72,6 +72,8 @@ function sendMessage(options) {
         responseData = '';
 
 	deferral = Q.defer();
+    
+    console.log('Generating URI for device ID: ' + deviceId);
 
     deviceUri = getDeviceUri(deviceId);
     token = sasToken || getSasToken(deviceUri);
