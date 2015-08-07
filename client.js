@@ -24,7 +24,7 @@ function getSasToken(uri) {
 		return token;
 	}
 
-    expiration = moment().add(15, 'minutes').unix();
+    expiration = moment().add(15, 'days').unix();
     
     toSign = encodeURIComponent(uri) + '\n' + expiration;
     hmac = crypto.createHmac('sha256', key);
@@ -32,6 +32,8 @@ function getSasToken(uri) {
 	encodedHmac = hmac.digest('base64');
 
     token = 'SharedAccessSignature sr=' + encodeURIComponent(uri) + '&sig=' + encodeURIComponent(encodedHmac) + '&se=' + expiration + '&skn=' + keyName;
+
+    console.log('Generated SAS token: ' + token);
 
 	sasTokens[uri] = token;
 
