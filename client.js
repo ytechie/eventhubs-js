@@ -8,7 +8,6 @@ var namespace,
     hubName,
     keyName,
     key,
-    sasToken,
 	sasTokens = {}; //key=uri, value=SAS token
 
 function getSasToken(uri) {
@@ -20,8 +19,8 @@ function getSasToken(uri) {
 
 	//Cache tokens to avoid recalculations
     token = sasTokens[uri];
-	if(token) {
-		return token;
+	if(token && moment().unix()  < token.expiration) {
+		return token.token;
 	}
 
     expiration = moment().add(15, 'days').unix();
@@ -33,9 +32,10 @@ function getSasToken(uri) {
 
     token = 'SharedAccessSignature sr=' + encodeURIComponent(uri) + '&sig=' + encodeURIComponent(encodedHmac) + '&se=' + expiration + '&skn=' + keyName;
 
-    console.log('Generated SAS token: ' + token);
-
-	sasTokens[uri] = token;
+	sasTokens[uri] = {
+        token: token,
+        expiration: expiration
+    };
 
 	return token;
 }
@@ -47,13 +47,12 @@ function getDeviceUri(deviceId) {
 }
 
 
-//hubNamespace, hubName, keyName, key, sasToken
+//hubNamespace, hubName, keyName, key
 function init(options) {
     namespace = options.hubNamespace;
     hubName = options.hubName;
     keyName = options.keyName;
     key = options.key;
-    sasToken = options.sasToken;
 
     //Allow the connection pool to grow larger. This improves performance
     //by a factor of 10x in my testing
@@ -73,10 +72,10 @@ function sendMessage(options) {
 
 	deferral = Q.defer();
     
-    console.log('Generating URI for device ID: ' + deviceId);
+    //console.log('Generating URI for device ID: ' + deviceId);
 
     deviceUri = getDeviceUri(deviceId);
-    token = sasToken || getSasToken(deviceUri);
+    token = getSasToken(deviceUri);
     
     if (typeof message === 'string') {
         payload = message;
@@ -96,7 +95,6 @@ function sendMessage(options) {
             'Content-Type': 'application/atom+xml;type=entry;charset=utf-8'
         }
     }
-
     
     req = https.request(requestOptions, function (res) {
         res.on('data', function(data) {
@@ -107,7 +105,10 @@ function sendMessage(options) {
                 return;
             }
 
-            deferral.resolve();
+            deferral.resolve({
+                statusCode: res.statusCode,
+                responseData: responseData
+            });
         }).on('error', function(e) {
             deferral.reject(e);
         });

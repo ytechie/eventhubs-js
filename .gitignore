@@ -50,3 +50,12 @@ bin/*
 obj/*
 *.suo
 npm-debug.log
+
+# ignore visual studio related project files
+*.njsproj
+*.sln
+
+test.js
+
+# intellij project file
+.idea
