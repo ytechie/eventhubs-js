@@ -40,10 +40,18 @@ function getSasToken(uri) {
 	return token;
 }
 
+//https://msdn.microsoft.com/en-us/library/azure/dn790664.aspx
 function getDeviceUri(deviceId) {
-	return 'https://' + namespace
-	+ '.servicebus.windows.net' + '/' + hubName
-	+ '/publishers/' + encodeURIComponent(deviceId) + '/messages';
+    var uri = null;
+    if (!deviceId) {
+        uri = 'https://' + namespace
+            + '.servicebus.windows.net' + '/' + hubName + '/messages';    
+    } else {
+        uri = 'https://' + namespace
+            + '.servicebus.windows.net' + '/' + hubName
+            + '/publishers/' + encodeURIComponent(deviceId) + '/messages';    
+    }
+    return uri;
 }
 
 
@@ -87,7 +95,7 @@ function sendMessage(options) {
 	requestOptions = {
         hostname: namespace + '.servicebus.windows.net',
         port: 443,
-        path: '/' + hubName + '/publishers/' + deviceId + '/messages',
+        path: deviceId ? '/' + hubName + '/publishers/' + deviceId + '/messages' :  '/' + hubName + '/messages',
         method: 'POST',
         headers: {
             'Authorization': token,
