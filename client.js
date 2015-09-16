@@ -40,12 +40,12 @@ function getSasToken(uri) {
 	return token;
 }
 
+//https://msdn.microsoft.com/en-us/library/azure/dn790664.aspx
 function getDeviceUri(deviceId) {
     var uri = null;
-    if (deviceId) {
+    if (!deviceId) {
         uri = 'https://' + namespace
-            + '.servicebus.windows.net' + '/' + hubName
-            + '/publishers/' + encodeURIComponent(deviceId) + '/messages';    
+            + '.servicebus.windows.net' + '/' + hubName + '/messages';    
     } else {
         uri = 'https://' + namespace
             + '.servicebus.windows.net' + '/' + hubName
