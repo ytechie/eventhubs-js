@@ -41,9 +41,17 @@ function getSasToken(uri) {
 }
 
 function getDeviceUri(deviceId) {
-	return 'https://' + namespace
-	+ '.servicebus.windows.net' + '/' + hubName
-	+ '/publishers/' + encodeURIComponent(deviceId) + '/messages';
+    var uri = null;
+    if (deviceId) {
+        uri = 'https://' + namespace
+            + '.servicebus.windows.net' + '/' + hubName
+            + '/publishers/' + encodeURIComponent(deviceId) + '/messages';    
+    } else {
+        uri = 'https://' + namespace
+            + '.servicebus.windows.net' + '/' + hubName
+            + '/publishers/' + encodeURIComponent(deviceId) + '/messages';    
+    }
+    return uri;
 }
 
 
