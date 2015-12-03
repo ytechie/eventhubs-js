@@ -80,7 +80,7 @@ function sendMessage(messageObject) {
         payload = JSON.stringify(message);
     }
 
-    send(payload, deviceId);
+    return send(payload, deviceId);
 }
 
 function sendMessages(messageObject) {
@@ -93,7 +93,7 @@ function sendMessages(messageObject) {
     
     payload = JSON.stringify(messages);
 
-    send(payload, deviceId);
+    return send(payload, deviceId);
 }
 
 function send(payload, deviceId) {
