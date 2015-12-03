@@ -1,4 +1,5 @@
-An Azure Event Hub client that is easy to use and performs well. From a local machine, I'm able to sustain **~300** messages per second from a single client. When running in an Azure VM in the same region as the Event Hubs instance, I was able to send **~400** messages per second. From a Raspberry PI, I was able to send **~40** messages per second.
+An Azure Event Hub client that is easy to use and performs well. From a local machine, I'm able to sustain **~300** *single* messages per second from a single client. When running in an Azure VM in the same region as the Event Hubs instance, I was able to send **~400** *single* messages per second. From a Raspberry PI, I was able to send **~40** *single* messages per second.
+There is an option for batching messages if needed by using the `sendMessages` function.
 
 ### Simplest Usage
 
@@ -19,6 +20,8 @@ An Azure Event Hub client that is easy to use and performs well. From a local ma
         deviceId: 1,
     });
 
+Note: deviceId is simply a unique name to identify your device to Azure. If not given, you will recieve a 401 Authorization failed response.
+
 ### Other Usages
 
 When you initialize the event hubs client, it's advisable to use a SAS token in a production environment. This is a revokable key that is unique to the device. You can generate a token programatically, or [online using this form](http://eventhubssasgenerator.azurewebsites.net/).
@@ -28,6 +31,16 @@ When you initialize the event hubs client, it's advisable to use a SAS token in 
         hubName: eventHubsHubName,
         sasToken: sasToken
     });
+
+For batching multiple messages and sending them together in single REST call, use the `sendMessages` function:
+
+    eventHubs.sendMessages({
+        messages: [], // array of messages
+        deviceId: 1,
+    });
+
+Beware that Azure EventHub REST API has a limit of 256kb for batching (per call), so make sure you batched messages
+do not reach this limit (otherwise an error will be returned).
 
 ### Installation
 
@@ -40,7 +53,8 @@ Don't forget to update your `package.json` file.
 Performance was optimized in a number of ways:
 
 1. Setting `http.globalAgent.maxSockets = 50;` increases the HTTP connection pool, which allows us to create more connections to serve messages that need sent. If you don't send a large volume of messages, no problem, the pool will remain relatively empty.
-1. Caching the SAS Tokens. I haven't tested the performance of the node.js crypto libraries and moment time calculations, but it was easy enough to cache the generated SAS tokens to avoid recalcuating on each message.
+2. Caching the SAS Tokens. I haven't tested the performance of the node.js crypto libraries and moment time calculations, but it was easy enough to cache the generated SAS tokens to avoid recalcuating on each message.
+3. Automatic recreation of cached token just before it expires
 
 ### Examples & Promises
 
