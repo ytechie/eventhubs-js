@@ -138,6 +138,10 @@ function send(payload, deviceId) {
             deferral.reject(e);
         });
     });
+    
+    req.on('error', function(e){
+    	deferral.reject(e);
+    });
 
     req.setSocketKeepAlive(true);
     req.write(payload);
