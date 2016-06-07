@@ -116,7 +116,7 @@ function send(payload, deviceId) {
         method: 'POST',
         headers: {
             'Authorization': token,
-            'Content-Length': payload.length,
+            'Content-Length': Buffer.byteLength(payload),
             'Content-Type': 'application/atom+xml;type=entry;charset=utf-8'
         }
     }
