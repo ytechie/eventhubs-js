@@ -1,7 +1,7 @@
 An Azure Event Hub client that is easy to use and performs well. From a local machine, I'm able to sustain **~300** *single* messages per second from a single client. When running in an Azure VM in the same region as the Event Hubs instance, I was able to send **~400** *single* messages per second. From a Raspberry PI, I was able to send **~40** *single* messages per second.
 There is an option for batching messages if needed by using the `sendMessages` function.
 
-### Simplest Usage
+### Easy Dev Usage
 
     eventHubs.init({
         hubNamespace: eventHubsNamespace,
@@ -22,7 +22,7 @@ There is an option for batching messages if needed by using the `sendMessages` f
 
 Note: deviceId is simply a unique name to identify your device to Azure. If not given, you will recieve a 401 Authorization failed response.
 
-### Other Usages
+### Production Usages
 
 When you initialize the event hubs client, it's advisable to use a SAS token in a production environment. This is a revokable key that is unique to the device. You can generate a token programatically, or [online using this form](http://eventhubssasgenerator.azurewebsites.net/).
 
@@ -64,8 +64,8 @@ Promises allow you to chain calls without "callback hell":
         message: deviceMessage,
         deviceId: 1,
     }).then(function() {
-		console.log('Message Sent!');
-	});
+	console.log('Message Sent!');
+    });
 
 Promises also allow us to kick of multiple send requests simultaneously, and easily manage the results:
 
