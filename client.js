@@ -8,9 +8,14 @@ var namespace,
     hubName,
     keyName,
     key,
+    sasToken,
 	sasTokens = {}; //key=uri, value=SAS token
 
 function getSasToken(uri) {
+    if(sasToken) {
+        return sasToken;
+    }
+
     var expiration,
         toSign,
 		hmac,
@@ -39,6 +44,8 @@ function getSasToken(uri) {
         expiration: expiration
     };
 
+    console.log('Generated SAS token "' + token + '"');
+
 	return token;
 }
 
@@ -62,6 +69,7 @@ function init(options) {
     hubName = options.hubName;
     keyName = options.keyName;
     key = options.key;
+    sasToken = options.sasToken;
 
     //Allow the connection pool to grow larger. This improves performance
     //by a factor of 10x in my testing

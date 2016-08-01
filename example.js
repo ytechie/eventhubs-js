@@ -56,7 +56,7 @@ function testSendContinuous() {
         key: eventHubsKey
     });
 
-    setInterval(sendRandomData, 1000);
+    
 }
 
 function testSendPerformance() {
